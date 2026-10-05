@@ -39,7 +39,7 @@
             </nav>
         </div>
         <div class="text-xs text-slate-400 bg-slate-50 p-3 rounded-xl border border-slate-100">
-            สถานะระบบ: <span class="text-emerald-600 font-semibold">● Export Engine Ready</span>
+            สถานะระบบ: <span class="text-emerald-600 font-semibold">● SRT Advanced Active</span>
         </div>
     </aside>
 
@@ -85,59 +85,65 @@
         <!-- 2. FORM (บท.24) -->
         <div id="view-form" class="space-y-6 view-section hidden">
             <div class="bg-white rounded-2xl border border-red-500/10 shadow-sm p-8 space-y-6">
-                <div class="border-b border-slate-100 pb-5 flex justify-between items-center">
+                <div class="border-b border-slate-100 pb-5 flex flex-wrap justify-between items-center gap-4">
                     <div>
                         <span class="text-xs font-bold text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full border border-red-200">ส. 12024 แบบ บท.24</span>
                         <h1 class="text-2xl font-bold text-slate-900 mt-2">บัญชีค่าความไม่สม่ำเสมอของทาง</h1>
                     </div>
-                    <button onclick="runCalculation(); switchTab('b19');" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-semibold shadow-md shadow-red-600/20 transition">⚡ บันทึกและคำนวณ บท.19</button>
+                    <div class="flex items-center gap-3">
+                        <button onclick="refreshTwist()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-sm font-semibold shadow transition flex items-center gap-2">
+                            🔄 คำนวณทวิสท์ (Refresh)
+                        </button>
+                        <button onclick="runCalculation(); switchTab('b19');" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-semibold shadow-md shadow-red-600/20 transition">⚡ คำนวณ บท.19</button>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 p-5 bg-slate-50/70 rounded-xl border border-slate-200/60">
+                <!-- ส่วนหัวแบบฟอร์ม รฟท. และค่าลิ้ม / ค่า a -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-5 bg-slate-50/70 rounded-xl border border-slate-200/60">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">ช่วง กม.</label>
-                        <input type="text" id="input-km-range" value="กม. 12+000 ถึง 13+000" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">ตอน / แขวง</label>
-                        <input type="text" id="input-section" value="พิษณุโลก / นครสวรรค์" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
+                        <label class="block text-xs font-semibold text-slate-500 mb-1">ช่วง กม. / ตอน / แขวง</label>
+                        <input type="text" id="input-km-range" value="กม. 12+000 ถึง 13+000 (พิษณุโลก)" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-500 mb-1">ผู้ตรวจสอบ</label>
                         <input type="text" id="input-inspector" value="นายช่างตรวจทาง" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">ค่า a ทั่วไป (มม.)</label>
-                        <input type="number" id="input-tolerance-gen" value="3.0" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
+                        <label class="block text-xs font-semibold text-slate-500 mb-1">ค่าลิ้มตามยาว / ค่าลิ้มแนวราง (มม.)</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="input-wedge-long" value="0" placeholder="ลิ้มตามยาว" class="w-1/2 px-2 py-2 bg-white border border-slate-200 rounded-lg text-sm" title="ค่าลิ้มตามยาว">
+                            <input type="number" id="input-wedge-align" value="0" placeholder="ลิ้มแนวราง" class="w-1/2 px-2 py-2 bg-white border border-slate-200 rounded-lg text-sm" title="ค่าลิ้มแนวราง">
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-red-600 mb-1">ค่า a แนวราง (มม.)</label>
-                        <input type="number" id="input-tolerance-align" value="3.0" class="w-full px-3 py-2 bg-white border border-red-200 rounded-lg text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-red-600 mb-1">ค่า a ทวิสท์ (มม.)</label>
-                        <input type="number" id="input-tolerance-twist" value="3.0" class="w-full px-3 py-2 bg-white border border-red-200 rounded-lg text-sm">
+                        <label class="block text-xs font-semibold text-red-600 mb-1">พิกัด a (ทั่วไป / แนวราง / ทวิสท์)</label>
+                        <div class="flex gap-1">
+                            <input type="number" id="input-tolerance-gen" value="3.0" class="w-1/3 px-1 py-2 bg-white border border-slate-200 rounded-lg text-xs text-center" title="a ทั่วไป">
+                            <input type="number" id="input-tolerance-align" value="3.0" class="w-1/3 px-1 py-2 bg-white border border-red-200 rounded-lg text-xs text-center" title="a แนวราง">
+                            <input type="number" id="input-tolerance-twist" value="3.0" class="w-1/3 px-1 py-2 bg-white border border-red-200 rounded-lg text-xs text-center" title="a ทวิสท์">
+                        </div>
                     </div>
                 </div>
 
                 <div class="flex justify-between items-center pt-2">
-                    <p class="text-sm font-semibold text-slate-600">รายการจุดตรวจวัด สทล. ทั้งหมด</p>
+                    <p class="text-sm font-semibold text-slate-600">รายการจุดตรวจวัด (แก้ไขค่าระดับขวาง แล้วกดปุ่ม Refresh ทวิสท์)</p>
                     <button onclick="addRow()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl shadow transition flex items-center gap-2">
-                        + เพิ่มจุด สทล.
+                        + เพิ่มจุดตรวจวัด
                     </button>
                 </div>
 
+                <!-- ตารางบันทึกข้อมูล บท.24 พร้อม Footer Sum -->
                 <div class="overflow-x-auto rounded-xl border border-slate-200/80">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr class="bg-red-600 text-white text-xs uppercase tracking-wider">
-                                <th class="p-3 text-center border-r border-red-500" rowspan="2">กม.</th>
-                                <th class="p-3 text-center border-r border-red-500" rowspan="2">สทล.</th>
+                                <th class="p-3 text-center border-r border-red-500" rowspan="2">กม./สทล.</th>
+                                <th class="p-3 text-center border-r border-red-500" rowspan="2">จุด</th>
                                 <th class="p-3 text-center border-r border-red-500" rowspan="2">ขนาดทาง</th>
                                 <th class="p-3 text-center border-r border-red-500" rowspan="2">ระดับขวาง</th>
                                 <th class="p-3 text-center border-r border-red-500" colspan="2">ด้านซ้าย</th>
                                 <th class="p-3 text-center border-r border-red-500" colspan="2">ด้านขวา</th>
-                                <th class="p-3 text-center border-r border-red-500" rowspan="2">ทวิสท์</th>
+                                <th class="p-3 text-center border-r border-red-500" rowspan="2">ทวิสท์<br><span class="text-[10px] font-normal lowercase">(จุดที่ $i$ - จุดที่ $i+1$)</span></th>
                                 <th class="p-3 text-center border-r border-red-500" rowspan="2">หมายเหตุ</th>
                                 <th class="p-3 text-center" rowspan="2">จัดการ</th>
                             </tr>
@@ -149,12 +155,15 @@
                             </tr>
                         </thead>
                         <tbody id="dataTableBody" class="divide-y divide-slate-100"></tbody>
+                        <tfoot id="dataTableFoot" class="bg-slate-100 font-bold text-xs uppercase text-slate-700 border-t-2 border-slate-200">
+                            <!-- Populated by JS -->
+                        </tfoot>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- 3. REPORT (บท.19พร้อมปุ่ม Export) -->
+        <!-- 3. REPORT (บท.19) -->
         <div id="view-b19" class="space-y-6 view-section hidden">
             <div class="bg-white rounded-2xl border border-red-500/10 shadow-sm p-8 space-y-6">
                 <div class="border-b border-slate-100 pb-5 flex flex-wrap justify-between items-center gap-4">
@@ -237,25 +246,49 @@
 
     <script>
         let trackData = [
-            { km: '12+000', gauge: 2, cross: -1, s_left: 3, a_left: -2, s_right: 1, a_right: -1, twist: 0, remark: 'ปกติ' },
-            { km: '12+100', gauge: -1, cross: 2, s_left: -2, a_left: 1, s_right: -3, a_right: 2, twist: -1, remark: 'ปกติ' },
-            { km: '12+200', gauge: 1, cross: 0, s_left: 4, a_left: -3, s_right: 2, a_right: -2, twist: 1, remark: 'ปกติ' },
-            { km: '12+300', gauge: 0, cross: -2, s_left: 1, a_left: 0, s_right: -1, a_right: 1, twist: 0, remark: 'ปกติ' },
-            { km: '12+400', gauge: 3, cross: 1, s_left: -3, a_left: 2, s_right: 3, a_right: -3, twist: -2, remark: 'ซ่อมบำรุง' },
-            { km: '12+500', gauge: -2, cross: -1, s_left: 2, a_left: -1, s_right: 0, a_right: 0, twist: 1, remark: 'ปกติ' },
-            { km: '12+600', gauge: 1, cross: 2, s_left: 0, a_left: -2, s_right: 2, a_right: 1, twist: 0, remark: 'ปกติ' },
-            { km: '12+700', gauge: 0, cross: 0, s_left: -1, a_left: 1, s_right: -2, a_right: -1, twist: -1, remark: 'ปกติ' },
-            { km: '12+800', gauge: 2, cross: -2, s_left: 3, a_left: -3, s_right: 1, a_right: 2, twist: 0, remark: 'ปกติ' },
-            { km: '12+900', gauge: -1, cross: 1, s_left: 1, a_left: 0, s_right: -1, a_right: 0, twist: 1, remark: 'ปกติ' }
+            { km: '12+000', gauge: 2, cross: -1, s_left: 3, a_left: -2, s_right: 1, a_right: -1, twist: 0, remark: '' },
+            { km: '12+100', gauge: -1, cross: 2, s_left: -2, a_left: 1, s_right: -3, a_right: 2, twist: 0, remark: '' },
+            { km: '12+200', gauge: 1, cross: 0, s_left: 4, a_left: -3, s_right: 2, a_right: -2, twist: 0, remark: '' },
+            { km: '12+300', gauge: 0, cross: -2, s_left: 1, a_left: 0, s_right: -1, a_right: 1, twist: 0, remark: '' },
+            { km: '12+400', gauge: 3, cross: 1, s_left: -3, a_left: 2, s_right: 3, a_right: -3, twist: 0, remark: '' },
+            { km: '12+500', gauge: -2, cross: -1, s_left: 2, a_left: -1, s_right: 0, a_right: 0, twist: 0, remark: '' },
+            { km: '12+600', gauge: 1, cross: 2, s_left: 0, a_left: -2, s_right: 2, a_right: 1, twist: 0, remark: '' },
+            { km: '12+700', gauge: 0, cross: 0, s_left: -1, a_left: 1, s_right: -2, a_right: -1, twist: 0, remark: '' },
+            { km: '12+800', gauge: 2, cross: -2, s_left: 3, a_left: -3, s_right: 1, a_right: 2, twist: 0, remark: '' },
+            { km: '12+900', gauge: -1, cross: 1, s_left: 1, a_left: 0, s_right: -1, a_right: 0, twist: 0, remark: '' }
         ];
+
+        function refreshTwist() {
+            for (let i = 0; i < trackData.length; i++) {
+                if (i < trackData.length - 1) {
+                    // สูตร: ระดับตามขวาง จุดที่ i ลบ จุดที่ i+1
+                    trackData[i].twist = Number((trackData[i].cross - trackData[i+1].cross).toFixed(2));
+                } else {
+                    trackData[i].twist = 0; // จุดสุดท้าย
+                }
+            }
+            initTable();
+        }
 
         function initTable() {
             const tbody = document.getElementById('dataTableBody');
+            const tfoot = document.getElementById('dataTableFoot');
             tbody.innerHTML = '';
+
+            let sumGauge = 0, sumCross = 0, sumSLeft = 0, sumALeft = 0, sumSRight = 0, sumARight = 0, sumTwist = 0;
+
             trackData.forEach((row, index) => {
+                sumGauge += row.gauge;
+                sumCross += row.cross;
+                sumSLeft += row.s_left;
+                sumALeft += row.a_left;
+                sumSRight += row.s_right;
+                sumARight += row.a_right;
+                sumTwist += row.twist;
+
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50">
-                        <td class="p-2 text-center bg-slate-50/50"><input type="text" class="w-20 p-1 text-center border rounded text-xs font-medium" value="${row.km}" onchange="updateData(${index}, 'km', this.value)"></td>
+                        <td class="p-2 text-center bg-slate-50/50"><input type="text" class="w-24 p-1 text-center border rounded text-xs font-medium" value="${row.km}" onchange="updateData(${index}, 'km', this.value)"></td>
                         <td class="p-2 text-center font-medium bg-slate-50/50">${index + 1}</td>
                         <td class="p-2 text-center"><input type="number" class="w-14 p-1 text-center border rounded text-xs" value="${row.gauge}" onchange="updateData(${index}, 'gauge', this.value)"></td>
                         <td class="p-2 text-center"><input type="number" class="w-14 p-1 text-center border rounded text-xs" value="${row.cross}" onchange="updateData(${index}, 'cross', this.value)"></td>
@@ -263,13 +296,28 @@
                         <td class="p-2 text-center"><input type="number" class="w-14 p-1 text-center border rounded text-xs" value="${row.a_left}" onchange="updateData(${index}, 'a_left', this.value)"></td>
                         <td class="p-2 text-center"><input type="number" class="w-14 p-1 text-center border rounded text-xs" value="${row.s_right}" onchange="updateData(${index}, 's_right', this.value)"></td>
                         <td class="p-2 text-center"><input type="number" class="w-14 p-1 text-center border rounded text-xs" value="${row.a_right}" onchange="updateData(${index}, 'a_right', this.value)"></td>
-                        <td class="p-2 text-center"><input type="number" class="w-14 p-1 text-center border rounded text-xs" value="${row.twist}" onchange="updateData(${index}, 'twist', this.value)"></td>
-                        <td class="p-2 text-center"><input type="text" class="w-24 p-1 text-center border rounded text-xs" value="${row.remark}" onchange="updateData(${index}, 'remark', this.value)"></td>
+                        <td class="p-2 text-center bg-slate-100 font-bold text-slate-700">${row.twist}</td>
+                        <td class="p-2 text-center"><input type="text" class="w-28 p-1 px-2 text-left border rounded text-xs" value="${row.remark}" placeholder="ระบุหมายเหตุ..." onchange="updateData(${index}, 'remark', this.value)"></td>
                         <td class="p-2 text-center">
                             <button onclick="deleteRow(${index})" class="px-2 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded text-xs font-bold transition">ลบ</button>
                         </td>
                     </tr>`;
             });
+
+            // แสดงผลรวม (SUM) ท้ายตาราง
+            tfoot.innerHTML = `
+                <tr>
+                    <td class="p-3 text-center" colspan="2">ผลรวม (SUM)</td>
+                    <td class="p-3 text-center">${sumGauge.toFixed(2)}</td>
+                    <td class="p-3 text-center">${sumCross.toFixed(2)}</td>
+                    <td class="p-3 text-center">${sumSLeft.toFixed(2)}</td>
+                    <td class="p-3 text-center">${sumALeft.toFixed(2)}</td>
+                    <td class="p-3 text-center">${sumSRight.toFixed(2)}</td>
+                    <td class="p-3 text-center">${sumARight.toFixed(2)}</td>
+                    <td class="p-3 text-center">${sumTwist.toFixed(2)}</td>
+                    <td class="p-3 text-center" colspan="2">-</td>
+                </tr>`;
+
             document.getElementById('kpi-total-points').innerText = trackData.length + " จุด";
             runCalculation();
         }
@@ -277,13 +325,13 @@
         function addRow() {
             let lastKm = "13+000";
             if(trackData.length > 0) { lastKm = trackData[trackData.length - 1].km; }
-            trackData.push({ km: lastKm, gauge: 0, cross: 0, s_left: 0, a_left: 0, s_right: 0, a_right: 0, twist: 0, remark: 'ปกติ' });
-            initTable();
+            trackData.push({ km: lastKm, gauge: 0, cross: 0, s_left: 0, a_left: 0, s_right: 0, a_right: 0, twist: 0, remark: '' });
+            refreshTwist();
         }
 
         function deleteRow(index) {
             trackData.splice(index, 1);
-            initTable();
+            refreshTwist();
         }
 
         function updateData(index, field, value) {
@@ -372,12 +420,12 @@
             document.getElementById('summary-grade-badge').innerText = grade;
 
             const kmRange = document.getElementById('input-km-range').value;
-            document.getElementById('summary-km-label').innerText = "ช่วงกิโลเมตร: " + kmRange;
+            document.getElementById('summary-km-label').innerText = "ช่วงข้อมูล: " + kmRange;
         }
 
         function exportToExcel() {
             let csv = '\ufeffรายงานวิเคราะห์ค่าความไม่สม่ำเสมอของทาง (บท.19)\n';
-            csv += 'ช่วงกิโลเมตร: ' + document.getElementById('input-km-range').value + '\n\n';
+            csv += 'ช่วงข้อมูล: ' + document.getElementById('input-km-range').value + '\n\n';
             csv += 'รายการตรวจสอบ,จำนวน (N),ค่าเฉลี่ย (m),ค่าเบี่ยงเบน (S),P1 (%),P2 (%),P Total (%)\n';
             
             const rows = document.querySelectorAll('#reportTableBody tr');
@@ -450,7 +498,7 @@
         }
 
         window.onload = function() {
-            initTable();
+            refreshTwist();
         };
     </script>
 </body>
